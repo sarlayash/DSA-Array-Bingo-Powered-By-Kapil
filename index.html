@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SarlaYash Productions Presents DSA Array Bingo | Powered By Kapil</title>
+  <meta name="description" content="SarlaYash Productions presents DSA Array Bingo Powered By Kapil. Play multiplayer or solo with AI bots. Win official certificates and badges in PNG & PDF!">
+  <meta name="theme-color" content="#00f3ff">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+
+  <!-- Google Fonts for Arcade & Certificate Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="arcade-theme">
+
+  <!-- Top Global Header / HUD Bar -->
+  <header class="game-header">
+    <div class="header-left">
+      <div class="logo-group">
+        <span class="logo-icon">🎰</span>
+        <div class="logo-text">
+          <span class="logo-top-brand">SARLAYASH PRODUCTIONS PRESENTS</span>
+          <span class="logo-main">DSA ARRAY <span class="highlight">BINGO</span></span>
+          <span class="logo-sub">⚡ POWERED BY KAPIL ⚡</span>
+        </div>
+      </div>
+      <div id="room-code-badge" class="room-badge hidden" title="Click to copy join link">
+        <span class="badge-label">ROOM</span>
+        <span id="display-room-code" class="badge-val">---</span>
+        <button id="btn-copy-link" class="btn-icon-xs" title="Copy Invite Link">🔗</button>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <!-- Player Profile Indicator -->
+      <div id="player-profile-pill" class="player-pill hidden">
+        <span id="player-avatar-badge" class="player-avatar-xs">🎮</span>
+        <span id="player-name-badge" class="player-name-xs">Player</span>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <button id="btn-open-awards" class="hud-btn awards-btn" title="View My Badges & Certificates">🎖️ <span class="desktop-only-inline">Awards</span></button>
+      <button id="btn-toggle-sound" class="hud-btn" title="Toggle Arcade Sound (SFX)">🔊</button>
+      <button id="btn-toggle-voice" class="hud-btn" title="Toggle Voice Caller (Announces Numbers & Winners)">🗣️</button>
+      <button id="btn-open-codex" class="hud-btn" title="DSA Array Codex (90 Problems)">📚</button>
+      <button id="btn-install-app" class="hud-btn install-btn" title="Install App on Phone / PC">📲 <span class="desktop-only-inline">Install</span></button>
+      <button id="btn-toggle-fullscreen" class="hud-btn desktop-only" title="Full Screen">⛶</button>
+    </div>
+  </header>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Floating Emoji Reactions Layer -->
+  <div id="reactions-container" class="reactions-layer"></div>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="app-main">
+
+    <!-- VIEW 1: WELCOME & JOIN / HOST / SOLO LOBBY -->
+    <section id="view-welcome" class="view-panel active">
+      <div class="hero-card">
+        <div class="hero-brand-ribbon">🎬 SARLAYASH PRODUCTIONS PRESENTS</div>
+        <h1 class="hero-title">DSA ARRAY <span class="neon-pink">BINGO</span></h1>
+        <div class="hero-powered-by">⚡ POWERED BY KAPIL ⚡</div>
+        <p class="hero-subtitle">
+          Standard 90-ball Indian Tambola & British Housie fused with <strong>90 LeetCode Array Problems & Algorithms</strong>!
+          Play in real-time with friends or challenge <strong>smart inbuilt AI bots</strong>.
+          Win official <strong>Badges & Certificates</strong> downloadable in pristine PNG & PDF!
+        </p>
+
+        <!-- Player Nickname & Avatar Setup -->
+        <div class="setup-box">
+          <label class="input-label">Choose Your Hacker Avatar & Player Tag</label>
+          <div class="avatar-selector" id="avatar-picker">
+            <button type="button" class="avatar-opt selected" data-avatar="💻">💻</button>
+            <button type="button" class="avatar-opt" data-avatar="🚀">🚀</button>
+            <button type="button" class="avatar-opt" data-avatar="🧙">🧙</button>
+            <button type="button" class="avatar-opt" data-avatar="⚡">⚡</button>
+            <button type="button" class="avatar-opt" data-avatar="🤖">🤖</button>
+            <button type="button" class="avatar-opt" data-avatar="💎">💎</button>
+            <button type="button" class="avatar-opt" data-avatar="🔥">🔥</button>
+            <button type="button" class="avatar-opt" data-avatar="👾">👾</button>
+            <button type="button" class="avatar-opt" data-avatar="🦊">🦊</button>
+            <button type="button" class="avatar-opt" data-avatar="👑">👑</button>
+          </div>
+
+          <div class="input-row">
+            <input type="text" id="input-player-name" class="arcade-input" placeholder="Enter Nickname (e.g. Kapil, ArrayNinja, TwoPointerPro)" maxlength="18" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- Main Action Cards: 3 Ways to Play -->
+        <div class="action-grid-3">
+          
+          <!-- Card 1: Single Player vs Inbuilt Bot -->
+          <div class="action-card solo-card">
+            <div class="card-icon">🤖</div>
+            <div class="card-tag-badge">NEW • INSTANT SOLO</div>
+            <h3>Play vs Inbuilt AI Bots</h3>
+            <p>Single player mode with smart AI bots (ByteBot, AlgoTron, PointerMage)! Voice caller announces numbers, rows, corners, early 5, and full house. Win official certificates!</p>
+            <button id="btn-open-solo-modal" class="btn-arcade btn-solo">
+              <span class="btn-shine"></span>
+              🤖 PLAY VS AI BOTS
+            </button>
+          </div>
+
+          <!-- Card 2: Host Multiplayer Game -->
+          <div class="action-card host-card">
+            <div class="card-icon">👑</div>
+            <div class="card-tag-badge">MULTIPLAYER ROOM</div>
+            <h3>Host a Game Room</h3>
+            <p>Create a live room with a shareable code and direct join link. Play with friends & colleagues on phone & laptop. Spacebar calling & auto-caller!</p>
+            <button id="btn-create-game" class="btn-arcade btn-host">
+              <span class="btn-shine"></span>
+              🎮 HOST MULTIPLAYER
+            </button>
+          </div>
+
+          <!-- Card 3: Join Existing Game -->
+          <div class="action-card join-card">
+            <div class="card-icon">🕹️</div>
+            <div class="card-tag-badge">FAST JOIN</div>
+            <h3>Join Game Room</h3>
+            <p>Enter the 6-character room code from your host to hop straight into the multiplayer match!</p>
+            <div class="join-input-group">
+              <input type="text" id="input-room-code" class="arcade-input code-input" placeholder="e.g. ARRAY-942" maxlength="14" autocomplete="off">
+              <button id="btn-join-game" class="btn-arcade btn-join">
+                <span class="btn-shine"></span>
+                🚀 JOIN GAME
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Features Bar -->
+        <div class="features-bar">
+          <div class="feat-item"><span class="feat-icon">🎯</span> Authentic 3×9 Tickets</div>
+          <div class="feat-item"><span class="feat-icon">🧠</span> 90 Array DSA Facts & Formulas</div>
+          <div class="feat-item"><span class="feat-icon">🗣️</span> Voice Announcing Numbers & Winners</div>
+          <div class="feat-item"><span class="feat-icon">📜</span> Download Certificates in PNG & PDF</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: TICKET SELECTION & PRE-GAME LOBBY -->
+    <section id="view-lobby" class="view-panel">
+      <div class="lobby-header-bar">
+        <div class="lobby-meta">
+          <h2>Room: <span id="lobby-room-code" class="neon-cyan">---</span></h2>
+          <span id="lobby-player-count-badge" class="pill-badge">👥 1 Player</span>
+          <span id="lobby-role-badge" class="pill-badge role">Host</span>
+          <span id="lobby-mode-badge" class="pill-badge" style="display:none;background:rgba(157,78,221,0.2);color:#c084fc;">🤖 Solo vs Bots</span>
+        </div>
+        <div class="lobby-share-actions">
+          <button id="btn-add-bot-lobby" class="btn-arcade-sm btn-purple" title="Add another AI bot to this match">🤖 + Add AI Bot</button>
+          <button id="btn-share-modal" class="btn-arcade-sm btn-cyan">📲 Invite Players / QR</button>
+        </div>
+      </div>
+
+      <div class="lobby-grid">
+        <!-- Ticket Selection Column -->
+        <div class="ticket-picker-box">
+          <div class="box-header">
+            <h3>🎟️ Select Your Bingo Ticket(s)</h3>
+            <span class="hint">Choose 1, 2, or 3 tickets to play!</span>
+          </div>
+
+          <!-- Quick Selector Bar -->
+          <div class="ticket-control-row">
+            <div class="ticket-count-toggle">
+              <label>Tickets to play:</label>
+              <div class="count-btns">
+                <button class="btn-count active" data-count="1">1</button>
+                <button class="btn-count" data-count="2">2</button>
+                <button class="btn-count" data-count="3">3</button>
+              </div>
+            </div>
+            <button id="btn-random-ticket" class="btn-arcade-sm btn-purple">🎲 Auto-Pick Random</button>
+          </div>
+
+          <!-- Available Ticket Browser Carousel / Grid -->
+          <div class="ticket-browser-container">
+            <div class="browser-nav">
+              <button id="btn-prev-ticket" class="btn-icon">◀</button>
+              <span id="ticket-browse-indicator" class="browse-index">Ticket #1 of 60</span>
+              <button id="btn-next-ticket" class="btn-icon">▶</button>
+              <button id="btn-select-current-ticket" class="btn-arcade-sm btn-pink">✓ Select This Ticket</button>
+            </div>
+            <div id="preview-ticket-mount" class="ticket-preview-wrapper">
+              <!-- Rendered Ticket Preview -->
+            </div>
+          </div>
+
+          <!-- Selected Tickets Tray -->
+          <div class="selected-tickets-tray">
+            <h4>My Selected Tickets (<span id="selected-ticket-count">0</span>/3):</h4>
+            <div id="selected-tickets-list" class="selected-pills-list">
+              <span class="empty-hint">No tickets chosen yet. Click 'Select This Ticket' or 'Auto-Pick Random'</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room Players & Host Start Control -->
+        <div class="room-roster-box">
+          <div class="box-header">
+            <h3>👥 Players & AI Bots In Room</h3>
+          </div>
+          <div id="lobby-players-list" class="players-scroll-list">
+            <!-- Populated via Socket.io -->
+          </div>
+
+          <!-- Host Start Control Panel -->
+          <div id="host-start-panel" class="host-start-panel">
+            <div class="host-badge-row">
+              <span class="crown">👑</span> <strong>Host Controls</strong>
+            </div>
+            <p class="host-tip">Ready to roll? Launch the game arena and start calling numbers!</p>
+            <button id="btn-start-game" class="btn-arcade btn-host-start">
+              <span class="btn-shine"></span>
+              🚀 LAUNCH GAME ARENA!
+            </button>
+          </div>
+
+          <div id="player-waiting-panel" class="player-waiting-panel hidden">
+            <div class="pulse-loader"></div>
+            <p>Waiting for room host to start the game... Have your tickets ready!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: LIVE GAME ARENA -->
+    <section id="view-game" class="view-panel">
+      
+      <!-- ARENA HUD (Caller Ball & DSA Spotlight) -->
+      <div class="arena-hud">
+        
+        <!-- Big Number Caller Sphere -->
+        <div class="caller-sphere-card">
+          <div class="sphere-meta">
+            <span class="sphere-label">CURRENT NUMBER</span>
+            <span id="call-counter" class="call-count-badge">0 / 90</span>
+          </div>
+          
+          <div id="ball-display" class="arcade-ball-3d">
+            <div class="ball-glow"></div>
+            <span id="current-ball-num" class="ball-number">--</span>
+            <span class="ball-shine"></span>
+          </div>
+
+          <!-- Host Quick Caller Controls -->
+          <div id="arena-host-controls" class="arena-host-toolbar hidden">
+            <button id="btn-call-next" class="btn-arcade-caller" title="Hotkey: Spacebar">
+              🎱 CALL NEXT
+            </button>
+            <div class="auto-caller-group">
+              <label class="switch-toggle" title="Auto draw numbers every few seconds">
+                <input type="checkbox" id="check-auto-caller">
+                <span class="slider"></span>
+              </label>
+              <span class="auto-label">Auto</span>
+              <select id="select-call-speed" class="speed-select" title="Calling Interval">
+                <option value="6000">Slow (6s)</option>
+                <option value="4000" selected>Normal (4s)</option>
+                <option value="2500">Fast (2.5s)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- DSA Problem & Concept Spotlight -->
+        <div class="dsa-spotlight-card">
+          <div class="spotlight-header">
+            <div class="badge-group">
+              <span class="dsa-pill topic-pill" id="dsa-topic-tag">DSA Concept</span>
+              <span class="dsa-pill complexity-pill" id="dsa-complexity-tag">O(N) Time</span>
+              <span class="dsa-pill pattern-pill" id="dsa-pattern-tag">Pattern</span>
+            </div>
+            <button id="btn-view-dsa-modal" class="btn-text-link">Full Details 🔍</button>
+          </div>
+
+          <h3 id="dsa-problem-title" class="dsa-title">
+            Draw a number to unlock an Array DSA Problem & LeetCode insight!
+          </h3>
+
+          <p id="dsa-problem-fact" class="dsa-fact">
+            Every called number reveals a fundamental DSA Array algorithm, sliding window trick, two-pointer proof, or memory architecture secret.
+          </p>
+
+          <div class="dsa-formula-box">
+            <span class="formula-label">Code Hint:</span>
+            <code id="dsa-code-hint">arr[index] = value;</code>
+          </div>
+
+          <!-- Recent Calls Strip -->
+          <div class="recent-strip-wrapper">
+            <span class="recent-label">RECENT:</span>
+            <div id="recent-calls-list" class="recent-calls-list">
+              <span class="no-calls">Waiting for first call...</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MAIN ARENA CONTENT: Split View (Tickets on Left, Tabs on Right) -->
+      <div class="arena-layout">
+        
+        <!-- Left: My Active Tickets -->
+        <div class="arena-tickets-pane">
+          <div class="pane-header">
+            <h3>🎟️ My Active Tickets</h3>
+            <div class="ticket-header-actions">
+              <label class="auto-daub-check">
+                <input type="checkbox" id="check-auto-daub">
+                <span>Auto-Daub Helper</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="game-tickets-container" class="game-tickets-stack">
+            <!-- Active Tickets Rendered Here with Daub Cells & Claim Bars -->
+          </div>
+        </div>
+
+        <!-- Right: Interactive Panels with Tabs -->
+        <div class="arena-side-pane">
+          
+          <!-- Tab Bar -->
+          <div class="arena-tab-bar">
+            <button class="tab-btn active" data-tab="tab-board">
+              <span class="tab-icon">🔢</span> Board (1-90)
+            </button>
+            <button class="tab-btn" data-tab="tab-prizes">
+              <span class="tab-icon">🏆</span> Prizes (<span id="prizes-won-count">0</span>/7)
+            </button>
+            <button class="tab-btn" data-tab="tab-players">
+              <span class="tab-icon">👥</span> Players & Bots (<span id="arena-player-count">1</span>)
+            </button>
+            <button class="tab-btn" data-tab="tab-chat">
+              <span class="tab-icon">💬</span> Chat
+            </button>
+          </div>
+
+          <!-- Tab Content 1: Master 1-90 Board -->
+          <div id="tab-board" class="tab-content active">
+            <div class="board-header">
+              <h4>Master Board (1 to 90)</h4>
+              <span class="board-counter"><span id="board-marked-count">0</span> / 90 Called</span>
+            </div>
+            <div id="master-board-grid" class="master-board-grid">
+              <!-- 90 tiles generated here -->
+            </div>
+          </div>
+
+          <!-- Tab Content 2: Prizes & Winners Leaderboard -->
+          <div id="tab-prizes" class="tab-content">
+            <div class="prizes-header">
+              <h4>Winning Categories & Leaderboard</h4>
+              <span class="hint">Winners get official badges and certificates!</span>
+            </div>
+            <div id="prizes-status-list" class="prizes-list">
+              <!-- Prizes rendered here -->
+            </div>
+          </div>
+
+          <!-- Tab Content 3: Room Players & Bots -->
+          <div id="tab-players" class="tab-content">
+            <div class="roster-header">
+              <h4>Active Players & Bots</h4>
+            </div>
+            <div id="arena-players-list" class="arena-players-list">
+              <!-- Live Players list -->
+            </div>
+          </div>
+
+          <!-- Tab Content 4: Chat & Reaction Emojis -->
+          <div id="tab-chat" class="tab-content">
+            <div class="chat-wrapper">
+              <!-- Quick Reaction Emojis Bar -->
+              <div class="reaction-bar">
+                <button class="reaction-btn" data-emoji="🎉">🎉</button>
+                <button class="reaction-btn" data-emoji="🔥">🔥</button>
+                <button class="reaction-btn" data-emoji="🏆">🏆</button>
+                <button class="reaction-btn" data-emoji="😱">😱</button>
+                <button class="reaction-btn" data-emoji="🚀">🚀</button>
+                <button class="reaction-btn" data-emoji="💡">💡</button>
+                <button class="reaction-btn" data-emoji="👏">👏</button>
+                <button class="reaction-btn" data-emoji="🎯">🎯</button>
+              </div>
+
+              <!-- Message History -->
+              <div id="chat-messages-box" class="chat-messages-box">
+                <div class="chat-sys-msg">Welcome to DSA Array Bingo chat! Powered By Kapil.</div>
+              </div>
+
+              <!-- Chat Input -->
+              <div class="chat-input-row">
+                <input type="text" id="input-chat-text" class="arcade-input-sm" placeholder="Say something..." maxlength="80">
+                <button id="btn-send-chat" class="btn-arcade-xs">Send</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= MODALS & POPUPS ================= -->
+
+  <!-- Modal 1: Solo vs AI Bots Setup Modal -->
+  <div id="modal-solo-setup" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🤖 Play vs Inbuilt AI Bots</h3>
+        <button class="btn-modal-close" data-close="modal-solo-setup">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--text-secondary);margin-bottom:1.25rem;">
+          Play solo with smart inbuilt AI bots. The voice announcer will call out numbers, rows, corners, early 5, and full house!
+        </p>
+
+        <div class="form-group-arcade">
+          <label class="input-label">Select Number of AI Bots:</label>
+          <div class="bot-count-selector">
+            <button type="button" class="btn-opt-box" data-bots="1">1 Bot<br><small style="color:var(--text-muted);">ByteBot</small></button>
+            <button type="button" class="btn-opt-box selected" data-bots="2">2 Bots<br><small style="color:var(--text-muted);">+ AlgoTron</small></button>
+            <button type="button" class="btn-opt-box" data-bots="3">3 Bots<br><small style="color:var(--text-muted);">+ PointerMage</small></button>
+          </div>
+        </div>
+
+        <div class="form-group-arcade" style="margin-top:1.25rem;">
+          <label class="input-label">Select Bot Challenge Difficulty:</label>
+          <div class="bot-diff-selector">
+            <button type="button" class="btn-opt-box" data-diff="easy">Casual<br><small style="color:var(--text-muted);">Relaxed</small></button>
+            <button type="button" class="btn-opt-box selected" data-diff="medium">Competitive<br><small style="color:var(--text-muted);">Human Speed</small></button>
+            <button type="button" class="btn-opt-box" data-diff="hard">Turbo<br><small style="color:var(--text-muted);">Master</small></button>
+          </div>
+        </div>
+
+        <button id="btn-start-solo-match" class="btn-arcade btn-solo" style="width:100%;margin-top:1.75rem;">
+          <span class="btn-shine"></span>
+          🚀 START SOLO MATCH NOW
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Official Certificate & Badge Download Modal (PNG & PDF) -->
+  <div id="modal-certificate" class="modal-overlay hidden">
+    <div class="modal-card cert-modal-card">
+      <div class="modal-header">
+        <div>
+          <span style="font-size:0.75rem;font-weight:800;color:var(--neon-yellow);letter-spacing:2px;display:block;">SARLAYASH PRODUCTIONS PRESENTS</span>
+          <h3>🎖️ Official Victory Credential</h3>
+        </div>
+        <button class="btn-modal-close" data-close="modal-certificate">✕</button>
+      </div>
+
+      <!-- Preview Switcher Tabs -->
+      <div class="cert-tab-bar">
+        <button id="btn-tab-view-cert" class="cert-view-tab active">📜 Certificate of Excellence</button>
+        <button id="btn-tab-view-badge" class="cert-view-tab">🎖️ Victorious Badge</button>
+      </div>
+
+      <!-- Live Canvas Mount Wrapper -->
+      <div class="cert-canvas-viewport">
+        <div id="cert-canvas-mount" class="cert-canvas-mount">
+          <!-- Live rendered Canvas injected here -->
+        </div>
+      </div>
+
+      <!-- Download Actions Bar -->
+      <div class="cert-download-actions">
+        <div class="download-btns-group">
+          <button id="btn-download-png" class="btn-arcade-sm btn-cyan">
+            📥 Download PNG (Lossless)
+          </button>
+          <button id="btn-download-pdf" class="btn-arcade-sm btn-pink">
+            📄 Download PDF (Print Ready)
+          </button>
+        </div>
+        <span class="cert-format-notice">✓ Formatted with strict text metrics — 0% text overlapping or cropping guaranteed!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Prize Won Fanfare Announcement -->
+  <div id="modal-winner" class="modal-overlay hidden">
+    <div class="modal-card winner-modal-card">
+      <div class="winner-trophy">🏆</div>
+      <h2 class="winner-heading">PRIZE CLAIMED!</h2>
+      <div class="winner-details">
+        <div id="modal-winner-avatar" class="winner-avatar">👑</div>
+        <h3 id="modal-winner-name" class="winner-name">Player</h3>
+        <p id="modal-winner-prize" class="winner-prize">Full House (Grand Winner)</p>
+        <span id="modal-winner-points" class="winner-points">+500 Points</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:1rem;">
+        <button id="btn-open-cert-from-winner" class="btn-arcade btn-host">
+          🎖️ VIEW & DOWNLOAD CERTIFICATE / BADGE
+        </button>
+        <button class="btn-arcade-sm" data-close="modal-winner" style="background:rgba(255,255,255,0.1);">
+          Continue Playing
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Bogus Claim Alert -->
+  <div id="modal-bogey" class="modal-overlay hidden">
+    <div class="modal-card bogey-card">
+      <div class="bogey-icon">⚠️</div>
+      <h2 class="bogey-title">BOGEY CLAIM!</h2>
+      <p id="bogey-reason-text" class="bogey-desc">Your ticket does not meet the requirements for this prize yet!</p>
+      <button class="btn-arcade btn-pink" data-close="modal-bogey">Return to Game</button>
+    </div>
+  </div>
+
+  <!-- Modal 5: Share / Invite / QR Modal -->
+  <div id="modal-share" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>📲 Invite Players to Room</h3>
+        <button class="btn-modal-close" data-close="modal-share">✕</button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Anyone can join instantly on phone, tablet, or laptop. No login required!</p>
+        
+        <div class="room-share-display">
+          <span class="share-label">ROOM CODE</span>
+          <h2 id="share-modal-room-code" class="share-code">ARRAY-000</h2>
+        </div>
+
+        <div class="link-copy-box">
+          <input type="text" id="input-share-link" class="arcade-input" readonly>
+          <button id="btn-copy-modal-link" class="btn-arcade-sm btn-cyan">Copy Link</button>
+        </div>
+
+        <div class="phone-wifi-box">
+          <h4>📱 On Local Wi-Fi / Phone Network:</h4>
+          <p id="local-ip-hint" class="ip-hint">Connecting to host...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 6: DSA Array Codex (All 90 Problems) -->
+  <div id="modal-codex" class="modal-overlay hidden">
+    <div class="modal-card codex-modal-card">
+      <div class="modal-header">
+        <h3>📚 DSA Array Codex & Problem Vault (1 to 90)</h3>
+        <button class="btn-modal-close" data-close="modal-codex">✕</button>
+      </div>
+      <div class="codex-search-row">
+        <input type="text" id="input-codex-search" class="arcade-input" placeholder="🔍 Search problems, patterns (e.g. 'Two Pointers', 'Kadane', 'Sliding Window', 'O(1)')...">
+      </div>
+      <div id="codex-cards-container" class="codex-grid">
+        <!-- 90 DSA Cards rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 7: PWA Install Instructions -->
+  <div id="modal-install" class="modal-overlay hidden">
+    <div class="modal-card install-card">
+      <div class="modal-header">
+        <h3>📲 Install DSA Array Bingo</h3>
+        <button class="btn-modal-close" data-close="modal-install">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="install-prompt-content" id="install-standard-prompt">
+          <p>Install this game as a standalone app on your Phone or Laptop for full-screen gaming, instant loading, and arcade sounds!</p>
+          <button id="btn-trigger-pwa-install" class="btn-arcade btn-cyan">🚀 Install App Now</button>
+        </div>
+        <div class="install-ios-instructions">
+          <h4>🍎 For iPhone & iPad (Safari):</h4>
+          <ol>
+            <li>Tap the <strong>Share</strong> button (box with arrow up at bottom of Safari).</li>
+            <li>Scroll down and tap <strong>"Add to Home Screen"</strong> (➕).</li>
+            <li>Tap <strong>Add</strong> in the top right. Enjoy full-screen arcade gaming!</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script>
+    if (typeof io === 'undefined') {
+      document.write('<script src="./socket.io/socket.io.js"><\/script>');
+    }
+  </script>
+  <script src="./js/jspdf.umd.min.js"></script>
+  <script src="./js/certificates.js"></script>
+  <script src="./js/dsa-facts.js"></script>
+  <script src="./js/tickets.js"></script>
+  <script src="./js/audio.js"></script>
+  <script src="./js/confetti.js"></script>
+  <script src="./js/app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('PWA ServiceWorker registered! Scope:', reg.scope))
+          .catch(err => console.log('ServiceWorker error:', err));
+      });
+    }
+  </script>
+</body>
+</html>
