@@ -1068,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Handle Prize Won (Voice announces winner: rows, corners, early 5, full house!)
   function handlePrizeWon(prize, winner) {
-    const isMe = winner.playerId === socket.id;
+    const isMe = (winner.playerId === myPlayer.id) || (Boolean(socket && socket.id) && winner.playerId === socket.id);
 
     soundManager.playWinFanfare();
     confettiLauncher.celebrateWin();
@@ -1077,13 +1077,14 @@ document.addEventListener('DOMContentLoaded', () => {
     soundManager.speakWinner(winner.playerName, prize.name, isMe);
 
     // Update latest award data
+    const pKey = (prize.key || 'WIN').toUpperCase();
     latestAwardData = {
       winnerName: winner.playerName,
       prizeName: prize.name,
-      prizeKey: prize.key,
+      prizeKey: prize.key || 'prize',
       avatar: winner.avatar,
-      points: prize.points,
-      certId: `SYP-KAPIL-${Math.floor(10000 + Math.random() * 90000)}-${prize.key.toUpperCase()}`,
+      points: prize.points || 100,
+      certId: `SYP-KAPIL-${Math.floor(10000 + Math.random() * 90000)}-${pKey}`,
       date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     };
 

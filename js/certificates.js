@@ -150,7 +150,7 @@ class CertificateManager {
     ctx.fillText('has demonstrated supreme precision, lightning speed, and mastery in Array DSA to claim victory in', this.certWidth / 2, 545);
 
     // 8. Prize Category Box / Ribbon
-    const prizeBoxWidth = 720;
+    const prizeBoxWidth = 760;
     const prizeBoxHeight = 70;
     const prizeBoxX = (this.certWidth - prizeBoxWidth) / 2;
     const prizeBoxY = 585;
@@ -162,9 +162,15 @@ class CertificateManager {
     ctx.strokeRect(prizeBoxX, prizeBoxY, prizeBoxWidth, prizeBoxHeight);
 
     ctx.fillStyle = '#00f3ff';
-    ctx.font = '800 32px "Chakra Petch", sans-serif';
+    let prizeFontSize = 32;
+    ctx.font = `800 ${prizeFontSize}px "Chakra Petch", sans-serif`;
     ctx.letterSpacing = '3px';
-    ctx.fillText(`🏆 ${prizeName} 🏆`, this.certWidth / 2, prizeBoxY + 35);
+    const prizeTitleText = `🏆 ${prizeName} 🏆`;
+    while (ctx.measureText(prizeTitleText).width > prizeBoxWidth - 40 && prizeFontSize > 18) {
+      prizeFontSize -= 2;
+      ctx.font = `800 ${prizeFontSize}px "Chakra Petch", sans-serif`;
+    }
+    ctx.fillText(prizeTitleText, this.certWidth / 2, prizeBoxY + 36);
 
     // 9. Array Knowledge Benchmark Note
     ctx.fillStyle = '#64748b';
@@ -494,11 +500,11 @@ class CertificateManager {
     }
 
     const { jsPDF } = window.jspdf;
-    const imgData = canvas.toDataURL('image/jpeg', 0.98);
+    const imgData = canvas.toDataURL('image/png');
 
-    // Standard A4 landscape dimensions: 297mm x 210mm
+    const isLandscape = canvas.width >= canvas.height;
     const pdf = new jsPDF({
-      orientation: 'landscape',
+      orientation: isLandscape ? 'landscape' : 'portrait',
       unit: 'mm',
       format: 'a4'
     });
@@ -519,7 +525,7 @@ class CertificateManager {
     const marginX = (pageWidth - renderW) / 2;
     const marginY = (pageHeight - renderH) / 2;
 
-    pdf.addImage(imgData, 'JPEG', marginX, marginY, renderW, renderH, undefined, 'FAST');
+    pdf.addImage(imgData, 'PNG', marginX, marginY, renderW, renderH, undefined, 'FAST');
     pdf.save(filename);
   }
 }
