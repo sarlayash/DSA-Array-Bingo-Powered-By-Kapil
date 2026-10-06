@@ -5,6 +5,23 @@ An online multiplayer and single-player **Tambola / Bingo 90** platform fused wi
 
 ---
 
+## 🌐 Live URLs & Deployment
+
+- **🔗 Live GitHub Pages (Play Instantly in Browser & Mobile)**:  
+  👉 **[https://sarlayash.github.io/DSA-Array-Bingo-Powered-By-Kapil/](https://sarlayash.github.io/DSA-Array-Bingo-Powered-By-Kapil/)**
+- **💻 GitHub Repository**:  
+  👉 **[https://github.com/sarlayash/DSA-Array-Bingo-Powered-By-Kapil](https://github.com/sarlayash/DSA-Array-Bingo-Powered-By-Kapil)**
+
+> 💡 **GitHub Pages Quick Enable**:
+> If the live URL displays a 404 on a brand new repository, enable GitHub Pages in 2 clicks:
+> 1. Go to **Settings > Pages** in your GitHub repository.
+> 2. Under **Build and deployment > Source**, choose either:
+>    - **GitHub Actions** (uses our preconfigured `.github/workflows/deploy.yml`), OR
+>    - **Deploy from a branch** -> Branch: `gh-pages` (or `main`) / Folder: `/ (root)` -> Click **Save**.
+> 3. Your game goes live at the URL above within 60 seconds!
+
+---
+
 ## ⚡ New Features & Capabilities
 
 - 🎬 **Official Branding**:
