@@ -6,9 +6,33 @@
   <title>SarlaYash Productions Presents DSA Array Bingo | Powered By Kapil</title>
   <meta name="description" content="SarlaYash Productions presents DSA Array Bingo Powered By Kapil. Play multiplayer or solo with AI bots. Win official certificates and badges in PNG & PDF!">
   <meta name="theme-color" content="#00f3ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DSA Bingo">
+  <meta name="application-name" content="DSA Bingo">
+
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="./icons/icon-512.png">
+
+  <!-- Early PWA Install Prompt Listener -->
+  <script>
+    window.pwaDeferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      window.pwaDeferredPrompt = e;
+      console.log('⚡ PWA early beforeinstallprompt captured!');
+      window.dispatchEvent(new CustomEvent('pwa-ready-to-install'));
+    });
+    window.addEventListener('appinstalled', () => {
+      window.pwaDeferredPrompt = null;
+      console.log('🎉 PWA successfully installed!');
+      window.dispatchEvent(new CustomEvent('pwa-installed-success'));
+    });
+  </script>
 
   <!-- Google Fonts for Arcade & Certificate Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -575,23 +599,133 @@
 
   <!-- Modal 7: PWA Install Instructions -->
   <div id="modal-install" class="modal-overlay hidden">
-    <div class="modal-card install-card">
+    <div class="modal-card install-modal-card">
       <div class="modal-header">
-        <h3>📲 Install DSA Array Bingo</h3>
+        <div class="install-header-title">
+          <span class="install-header-icon">📲</span>
+          <div>
+            <h3>Install DSA Array Bingo</h3>
+            <span class="install-header-sub">Play offline, full-screen & zero lag</span>
+          </div>
+        </div>
         <button class="btn-modal-close" data-close="modal-install">✕</button>
       </div>
-      <div class="modal-body">
-        <div class="install-prompt-content" id="install-standard-prompt">
-          <p>Install this game as a standalone app on your Phone or Laptop for full-screen gaming, instant loading, and arcade sounds!</p>
-          <button id="btn-trigger-pwa-install" class="btn-arcade btn-cyan">🚀 Install App Now</button>
+
+      <div class="modal-body install-modal-body">
+        <!-- Standalone already installed notification (hidden if in browser) -->
+        <div id="install-box-already" class="install-status-box installed-box hidden">
+          <span class="status-big-icon">🎉</span>
+          <h4>Already Running as an App!</h4>
+          <p>You have already installed DSA Array Bingo in standalone mode. Enjoy full-screen gaming!</p>
         </div>
-        <div class="install-ios-instructions">
-          <h4>🍎 For iPhone & iPad (Safari):</h4>
-          <ol>
-            <li>Tap the <strong>Share</strong> button (box with arrow up at bottom of Safari).</li>
-            <li>Scroll down and tap <strong>"Add to Home Screen"</strong> (➕).</li>
-            <li>Tap <strong>Add</strong> in the top right. Enjoy full-screen arcade gaming!</li>
-          </ol>
+
+        <!-- 1-Click Native Action (visible when prompt is available) -->
+        <div id="install-box-native" class="install-native-box hidden">
+          <div class="native-box-glow">
+            <span class="sparkle-icon">⚡</span>
+            <div>
+              <strong>Instant 1-Click Install Ready!</strong>
+              <p>Add to your phone home screen or laptop desktop app drawer:</p>
+            </div>
+          </div>
+          <button id="btn-trigger-pwa-install" class="btn-arcade btn-cyan btn-full btn-lg pulse-glow">
+            📲 Install Game to Phone / PC Now
+          </button>
+          <div class="divider-text"><span>OR FOLLOW DEVICE GUIDE BELOW</span></div>
+        </div>
+
+        <!-- Platform Tabs -->
+        <div class="install-tabs-nav">
+          <button class="install-tab-btn active" data-install-tab="android">🤖 Android</button>
+          <button class="install-tab-btn" data-install-tab="ios">🍎 iPhone / iPad</button>
+          <button class="install-tab-btn" data-install-tab="desktop">💻 PC / Mac</button>
+        </div>
+
+        <!-- Tab 1: Android -->
+        <div id="install-pane-android" class="install-tab-pane active">
+          <div class="install-guide-list">
+            <div class="guide-step">
+              <span class="step-num">1</span>
+              <div class="step-desc">
+                <strong>Tap Browser Menu (⋮)</strong>
+                <p>Tap the three vertical dots in the top-right corner of Chrome or Edge.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <span class="step-num">2</span>
+              <div class="step-desc">
+                <strong>Tap "Install app" or "Add to Home screen"</strong>
+                <p>Select the install option in the dropdown list.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <span class="step-num">3</span>
+              <div class="step-desc">
+                <strong>Confirm "Install"</strong>
+                <p>DSA Array Bingo will appear on your phone home screen with full audio and offline support!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: iOS -->
+        <div id="install-pane-ios" class="install-tab-pane">
+          <div class="install-guide-list">
+            <div class="guide-step">
+              <span class="step-num">1</span>
+              <div class="step-desc">
+                <strong>Tap Safari Share Button <span class="step-badge">⎋</span></strong>
+                <p>At the bottom toolbar of Safari on iPhone or iPad, tap the square icon with an arrow pointing up.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <span class="step-num">2</span>
+              <div class="step-desc">
+                <strong>Scroll down & tap "Add to Home Screen" <span class="step-badge">➕</span></strong>
+                <p>Tap the menu item marked with the plus icon.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <span class="step-num">3</span>
+              <div class="step-desc">
+                <strong>Tap "Add" in Top-Right</strong>
+                <p>The game launches directly in standalone full-screen without Safari browser bars!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Desktop -->
+        <div id="install-pane-desktop" class="install-tab-pane">
+          <div class="install-guide-list">
+            <div class="guide-step">
+              <span class="step-num">1</span>
+              <div class="step-desc">
+                <strong>Look at the Address Bar (Top Right)</strong>
+                <p>In Chrome or Edge, find the install icon on the right side of the address bar (<span class="step-badge">⊕</span> or computer icon).</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <span class="step-num">2</span>
+              <div class="step-desc">
+                <strong>Click the Install Icon</strong>
+                <p>Or click the three dots menu (⋮) -> <em>Save and share</em> -> <em>Install DSA Array Bingo...</em></p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <span class="step-num">3</span>
+              <div class="step-desc">
+                <strong>Click "Install" in Popup</strong>
+                <p>Plays in a dedicated borderless desktop window with arcade sound effects!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="install-perks">
+          <span class="perk-tag">⚡ Instant Offline Play</span>
+          <span class="perk-tag">🎮 Full-Screen Video Game HUD</span>
+          <span class="perk-tag">🔊 Arcade SFX & Voice Caller</span>
         </div>
       </div>
     </div>

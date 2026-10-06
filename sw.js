@@ -1,4 +1,4 @@
-const CACHE_NAME = 'syp-dsa-bingo-v1';
+const CACHE_NAME = 'syp-dsa-bingo-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -12,13 +12,20 @@ const ASSETS_TO_CACHE = [
   './js/app.js',
   './manifest.json',
   './icons/icon.svg',
-  './icons/icon-192.png'
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE).catch(err => console.log('SW cache partial:', err));
+    caches.open(CACHE_NAME).then(async (cache) => {
+      for (const asset of ASSETS_TO_CACHE) {
+        try {
+          await cache.add(asset);
+        } catch (err) {
+          console.warn('SW cache partial item:', asset, err);
+        }
+      }
     })
   );
   self.skipWaiting();

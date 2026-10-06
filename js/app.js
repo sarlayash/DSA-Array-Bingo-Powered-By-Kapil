@@ -149,6 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const modalInstall = document.getElementById('modal-install');
   const btnTriggerPwaInstall = document.getElementById('btn-trigger-pwa-install');
+  const installBoxAlready = document.getElementById('install-box-already');
+  const installBoxNative = document.getElementById('install-box-native');
 
   // ================= LOCAL STORAGE LOAD =================
   try {
@@ -1391,35 +1393,158 @@ document.addEventListener('DOMContentLoaded', () => {
     localIpHint.innerHTML = `Phones on same Wi-Fi can open: <br><strong style="color:var(--neon-cyan);">${links}</strong>`;
   }
 
-  // ================= PWA INSTALLATION =================
+  // ================= PWA INSTALLATION & STANDALONE LOGIC =================
+  let deferredInstallPrompt = window.pwaDeferredPrompt || null;
+
+  function isAppInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true ||
+           document.referrer.includes('android-app://') ||
+           localStorage.getItem('dsa_bingo_pwa_installed') === 'true';
+  }
+
+  function updatePwaUI() {
+    const promptAvailable = Boolean(deferredInstallPrompt || window.pwaDeferredPrompt);
+    const installed = isAppInstalled();
+
+    if (installed) {
+      btnInstallApp.innerHTML = '✅ <span class="desktop-only-inline">Installed</span>';
+      btnInstallApp.title = 'App installed in standalone mode';
+      if (installBoxAlready) installBoxAlready.classList.remove('hidden');
+      if (installBoxNative) installBoxNative.classList.add('hidden');
+    } else {
+      btnInstallApp.innerHTML = '📲 <span class="desktop-only-inline">Install</span>';
+      btnInstallApp.title = 'Install App on Phone / PC';
+      if (installBoxAlready) installBoxAlready.classList.add('hidden');
+      if (installBoxNative) {
+        if (promptAvailable) {
+          installBoxNative.classList.remove('hidden');
+        } else {
+          installBoxNative.classList.add('hidden');
+        }
+      }
+    }
+  }
+
+  function switchInstallTab(tabKey) {
+    document.querySelectorAll('.install-tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.installTab === tabKey);
+    });
+    document.querySelectorAll('.install-tab-pane').forEach(pane => {
+      pane.classList.remove('active');
+    });
+    const activePane = document.getElementById(`install-pane-${tabKey}`);
+    if (activePane) activePane.classList.add('active');
+  }
+
+  function openInstallModal() {
+    updatePwaUI();
+    modalInstall.classList.remove('hidden');
+
+    // Auto-detect OS/platform
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    const isAndroid = /Android/.test(ua);
+
+    let targetTab = 'desktop';
+    if (isIOS) targetTab = 'ios';
+    else if (isAndroid) targetTab = 'android';
+
+    switchInstallTab(targetTab);
+  }
+
+  function triggerNativePrompt(promptObj) {
+    if (!promptObj) {
+      openInstallModal();
+      return;
+    }
+
+    promptObj.prompt();
+    promptObj.userChoice.then((choiceResult) => {
+      if (choiceResult && choiceResult.outcome === 'accepted') {
+        showToast('🎉 Thank you for installing DSA Array Bingo!');
+        confettiLauncher.fireworks();
+        localStorage.setItem('dsa_bingo_pwa_installed', 'true');
+        deferredInstallPrompt = null;
+        window.pwaDeferredPrompt = null;
+        updatePwaUI();
+        modalInstall.classList.add('hidden');
+      } else {
+        showToast('Install cancelled. You can install anytime!');
+      }
+    }).catch((err) => {
+      console.log('Install prompt error:', err);
+      openInstallModal();
+    });
+  }
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredInstallPrompt = e;
-    btnInstallApp.classList.remove('hidden');
+    window.pwaDeferredPrompt = e;
+    updatePwaUI();
   });
 
+  window.addEventListener('pwa-ready-to-install', () => {
+    deferredInstallPrompt = window.pwaDeferredPrompt;
+    updatePwaUI();
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    window.pwaDeferredPrompt = null;
+    localStorage.setItem('dsa_bingo_pwa_installed', 'true');
+    updatePwaUI();
+    showToast('🎉 DSA Array Bingo successfully installed!');
+  });
+
+  window.addEventListener('pwa-installed-success', () => {
+    deferredInstallPrompt = null;
+    window.pwaDeferredPrompt = null;
+    localStorage.setItem('dsa_bingo_pwa_installed', 'true');
+    updatePwaUI();
+  });
+
+  // Tab switching click handlers
+  document.querySelectorAll('.install-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      soundManager.playClick();
+      switchInstallTab(btn.dataset.installTab);
+    });
+  });
+
+  // Header Install Button Click
   btnInstallApp.addEventListener('click', () => {
     soundManager.playClick();
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      deferredInstallPrompt.userChoice.then((choice) => {
-        if (choice.outcome === 'accepted') {
-          showToast('🎉 Thank you for installing DSA Array Bingo!');
-        }
-        deferredInstallPrompt = null;
-      });
+    const prompt = deferredInstallPrompt || window.pwaDeferredPrompt;
+    if (isAppInstalled()) {
+      showToast('✅ DSA Array Bingo is already running as an installed App!');
+      openInstallModal();
+      return;
+    }
+
+    if (prompt) {
+      triggerNativePrompt(prompt);
     } else {
-      modalInstall.classList.remove('hidden');
+      openInstallModal();
     }
   });
 
-  btnTriggerPwaInstall.addEventListener('click', () => {
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-    } else {
-      showToast('To install, use Chrome menu -> "Install App" or Safari -> "Add to Home Screen".');
-    }
-  });
+  // Modal 1-Click Install Button Click
+  if (btnTriggerPwaInstall) {
+    btnTriggerPwaInstall.addEventListener('click', () => {
+      soundManager.playClick();
+      const prompt = deferredInstallPrompt || window.pwaDeferredPrompt;
+      if (prompt) {
+        triggerNativePrompt(prompt);
+      } else {
+        showToast('Choose your device tab below for quick 2-step setup!');
+      }
+    });
+  }
+
+  // Initial check
+  updatePwaUI();
 
   btnToggleFullscreen.addEventListener('click', () => {
     soundManager.playClick();

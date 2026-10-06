@@ -1,29 +1,46 @@
 {
   "name": "SarlaYash Presents DSA Array Bingo Powered By Kapil",
-  "short_name": "DSABingo",
+  "short_name": "DSA Bingo",
+  "id": "dsa-array-bingo-sarlayash",
   "description": "Multiplayer & Solo Bingo with 90 Array DSA Problems, Arcade SFX, and Downloadable Certificates!",
-  "start_url": "./",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay", "minimal-ui", "browser"],
   "background_color": "#0a0f1d",
   "theme_color": "#00f3ff",
   "orientation": "portrait-primary",
+  "categories": ["games", "education", "entertainment"],
   "icons": [
     {
       "src": "./icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "./icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "./icons/icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }
