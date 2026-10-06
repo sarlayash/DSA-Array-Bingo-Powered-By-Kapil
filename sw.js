@@ -1,4 +1,4 @@
-const CACHE_NAME = 'syp-dsa-bingo-v2';
+const CACHE_NAME = 'syp-dsa-bingo-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
