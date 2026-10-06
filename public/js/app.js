@@ -4,7 +4,20 @@
 // =====================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  const socket = io();
+  let socket = null;
+  try {
+    if (typeof io !== 'undefined') {
+      socket = io({
+        reconnectionAttempts: 5,
+        timeout: 5000
+      });
+    }
+  } catch (err) {
+    console.warn('Socket initialization note:', err);
+  }
+  if (!socket) {
+    socket = { connected: false, on: () => {}, emit: () => {} };
+  }
 
   // State
   let myPlayer = {
@@ -20,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedTicketIds = new Set();
   let maxTicketsAllowed = 1;
   let daubedNumbersByTicket = new Map();
-  let deferredInstallPrompt = null;
+  let deferredInstallPrompt = (typeof window !== 'undefined' && window.pwaDeferredPrompt) ? window.pwaDeferredPrompt : null;
   let localServerIps = [];
 
   // Certificate & Badge State
@@ -420,7 +433,12 @@ document.addEventListener('DOMContentLoaded', () => {
     soundManager.playClick();
     const name = getPlayerName();
     myPlayer.name = name;
-    socket.emit('createRoom', { hostName: name, avatar: myPlayer.avatar });
+    if (socket && socket.connected) {
+      socket.emit('createRoom', { hostName: name, avatar: myPlayer.avatar });
+    } else {
+      showToast('⚡ Static mode: Launching game arena vs AI bots!');
+      startClientSideSoloGame(name, myPlayer.avatar, 2, 'medium');
+    }
   });
 
   btnJoinGame.addEventListener('click', () => {
@@ -433,7 +451,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     myPlayer.name = name;
-    socket.emit('joinRoom', { roomCode, playerName: name, avatar: myPlayer.avatar });
+    if (socket && socket.connected) {
+      socket.emit('joinRoom', { roomCode, playerName: name, avatar: myPlayer.avatar });
+    } else {
+      showToast('⚠️ Multiplayer server offline. Launching match vs AI bots!');
+      startClientSideSoloGame(name, myPlayer.avatar, 2, 'medium');
+    }
   });
 
   inputRoomCode.addEventListener('keyup', (e) => {
@@ -1395,7 +1418,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ================= PWA INSTALLATION & STANDALONE LOGIC =================
-  let deferredInstallPrompt = window.pwaDeferredPrompt || null;
+  deferredInstallPrompt = window.pwaDeferredPrompt || deferredInstallPrompt || null;
 
   function isAppInstalled() {
     return window.matchMedia('(display-mode: standalone)').matches ||
